@@ -131,7 +131,7 @@ getAbsoluteConfig() {
         exit
     fi
 
-    CONFIG=$( realpath "${CONFIG}" )
+#    CONFIG=$( realpath "${CONFIG}" )
 }
 
 runLocally() {
@@ -161,7 +161,7 @@ runLocally() {
 runRemotely() {
     #Send the config and this script to the remote server to be run
     getAbsoluteConfig
-    source "${CONFIG}"
+    . "${CONFIG}"
     
     echo "BACKUPHOSTNAME=$(hostname)" > /tmp/hostname
     cat "${CONFIG}" /tmp/hostname "${SCRIPTDIR}"/deleteoldbackups.sh | ssh -T -p "${REMOTEPORT}" "${REMOTEUSER}"@"${REMOTESERVER}" "/usr/bin/env bash"
