@@ -41,15 +41,15 @@ if [ ! -e "${CONFIG}" ]; then
 fi
 
 # Load in config
-CONFIG=$( realpath "${CONFIG}" )
-source "${CONFIG}"
+#CONFIG=$( realpath "${CONFIG}" )
+. "${CONFIG}"
 
 ### END OF CONFIG ###
 
 ### CHECKS ###
 
 # This section checks for all of the binaries used in the backup
-BINARIES=( cat cd command date dirname echo find openssl pwd realpath rm rsync scp ssh tar )
+BINARIES=( cat cd command date dirname echo find openssl pwd rm rsync scp ssh tar )
 
 # Iterate over the list of binaries, and if one isn't found, abort
 for BINARY in "${BINARIES[@]}"; do
@@ -86,7 +86,7 @@ fi
 
 BACKUPDATE=$(date -u +%Y-%m-%d-%H%M)
 STARTTIME=$(date +%s)
-TARFILE="${LOCALDIR}""$(hostname)"-"${BACKUPDATE}".tgz
+TARFILE="${LOCALDIR}""$(hostname)"-"${BACKUPDATE}".tar.gz
 SQLFILE="${TEMPDIR}mysql_${BACKUPDATE}.sql"
 
 cd "${LOCALDIR}" || exit
@@ -114,7 +114,7 @@ fi
 
 log "Starting tar backup dated ${BACKUPDATE}"
 # Prepare tar command
-TARCMD="-zcf ${TARFILE} ${BACKUP[*]}"
+TARCMD="-zcvf ${TARFILE} ${BACKUP[*]}"
 
 # Check if there are any exclusions
 if [[ "x${EXCLUDE[@]}" != "x" ]]; then
@@ -129,7 +129,7 @@ tar ${TARCMD}
 
 # Encrypt tar file
 log "Encrypting backup"
-openssl enc -aes256 -in "${TARFILE}" -out "${TARFILE}".enc -pass pass:"${BACKUPPASS}" -md sha1
+openssl enc -e -aes-256-cbc  -in "${TARFILE}" -out "${TARFILE}".enc -pass pass:"${BACKUPPASS}" -md sha1
 log "Encryption completed"
 
 # Delete unencrypted tar
