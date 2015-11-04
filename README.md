@@ -9,6 +9,7 @@ A simple backup script utilising OpenSSL, tar and rsync, written in bash.
 * The backup script can store a copy both locally and on a remote device/server
 * Backups are sent over SSH
 * Currently supports GNU/Linux and FreeBSD
+* openssl enc -d -aes-256-cbc -in slc09wpv-2015-11-04-1122.tar.gz.enc -out slc09wpv-2015-11-04-1122.tar.gz -pass pass:"mysecurepassword" -md sha1
 
 ##Backup Retention
 
